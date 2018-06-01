@@ -1,0 +1,46 @@
+---
+title: "Scraper Homework"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+#install.packages('rvest') # library for scraping
+library(rvest)
+```
+
+### web-scraper for news site
+css-selectors: https://www.w3schools.com/cssref/css_selectors.asp
+
+```{r get}
+url <- "https://www.pravda.com.ua/news/"
+content <- read_html(url)
+
+
+### Title
+
+content %>% html_nodes('div.article.article_bold div.article__title') %>% html_text()
+
+title <- content %>% html_nodes('div.article.article_bold div.article__title') %>% html_text()
+
+### Link to article
+# g! rvest href attribute
+content %>% html_nodes('div.article.article_bold div.article__title a') %>% html_attr('href')
+
+link <- content %>% html_nodes('div.article.article_bold div.article__title a') %>% html_attr('href')
+
+
+
+### Time
+content %>% html_nodes('div.article.article_bold div.article__time') %>% html_text() 
+
+time <- content %>% html_nodes('div.article.article_bold div.article__time') %>% html_text() 
+
+length(time)
+length(link)
+length(title)
+
+df <- data.frame(news_title = title, news_link = link, news_time = time)
+write.csv2(df, "news2.csv")
+```
+
